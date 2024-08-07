@@ -61,7 +61,7 @@ namespace OxygenConsumingPlant
                                 plantGameObject = kprefabID.gameObject;
                             }
                         }
-
+                        // TODO 判断有点多余，有时间再改一下
                         // 处理不为空的植物对象
                         bool isPlantGameObjectValid = plantGameObject != null;
                         if (isPlantGameObjectValid)
