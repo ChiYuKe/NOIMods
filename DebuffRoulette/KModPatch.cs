@@ -17,6 +17,7 @@ namespace DebuffRoulette
                 base.OnLoad(harmony);
                 harmony.PatchAll();
                 ModEntry.Initialize();
+               
                 Debug.Log("Mod已加载并初始化。");
             }
         }

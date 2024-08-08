@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 namespace DebuffRoulette
 {
     public static class RandomDebuffTimerManager
@@ -35,6 +36,7 @@ namespace DebuffRoulette
                 Debug.Log("复制人对象数量变化，缓存已更新");
             }
 
+
             if (Time.time - lastUpdateTime >= updateInterval)
             {
                 ProcessMinionGameObjects(cachedMinionGameObjects);
@@ -65,6 +67,37 @@ namespace DebuffRoulette
                     {
                         Debug.Log("可以死了");
                         gameObject.GetSMI<DeathMonitor.Instance>().Kill(DeathsManager.CombatDeath);
+
+
+
+                        // 延迟执行后的操作
+                        DelayedActionExecutor.Instance.ExecuteAfterDelay(5f, () =>
+                        {
+                            Debug.Log("延迟执行了");
+                            // 获取原始 GameObject 的位置
+                            Vector3 position = gameObject.transform.position;
+
+                            // 获取原始 GameObject 的图层
+                            Grid.SceneLayer sceneLayer = Grid.SceneLayer.Ore; // 示例代码，实际需要获取图层的方式可能不同
+
+                            // 实例化新的 GameObject
+                            GameObject prefab = Assets.GetPrefab(new Tag("iron")); // 假设 "iron" 是预制体的标签
+                            GameObject newGameObject = GameUtil.KInstantiate(
+                                gameObject, // 这里传入适当的预制体
+                                position,
+                                sceneLayer, // 确保传入正确的图层
+                                null, // 如果需要，可以传入父对象
+                                0 // 默认标记或层次
+                            );
+
+                            newGameObject.SetActive(true); // 激活新实例
+                        });
+
+
+
+
+
+
                     }
                 }
             }
