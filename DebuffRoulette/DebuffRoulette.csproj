@@ -71,6 +71,7 @@
     <Compile Include="Buff.cs" />
     <Compile Include="DelayedActionExecutor .cs" />
     <Compile Include="KModPatch.cs" />
+    <Compile Include="STRINGS.cs" />
     <Compile Include="Tool\FXHManager.cs" />
     <Compile Include="Tool\KModEffectConfigurator.cs" />
     <Compile Include="Tool\KModGridUtilities.cs" />

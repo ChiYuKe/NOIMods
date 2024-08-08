@@ -1,4 +1,5 @@
-﻿using Klei.AI;
+﻿using FMOD;
+using Klei.AI;
 using KModTool;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace DebuffRoulette
         private static int cachedMinionCount = 0; // 缓存的数量
         private static float lastUpdateTime = 0f; // 上次更新的时间
         private static float updateInterval = 1f; // 定期更新的时间间隔（秒）
-        private static float ageThreshold = 16 * 600f;
+        private static float ageThreshold = 17 * 600f;
         public static float age80PercentThreshold = ageThreshold * 0.8f; // 目标年龄80%
 
         public static void StartTimer()
@@ -44,7 +45,7 @@ namespace DebuffRoulette
             {
                 ProcessMinionGameObjects(cachedMinionGameObjects);
 
-                ApplyDebuffIfAgeThresholdMet(cachedMinionGameObjects); // 调用新方法
+                ApplyDebuffIfAgeThresholdMet(cachedMinionGameObjects); 
                 lastUpdateTime = Time.time;
             }
 
@@ -75,7 +76,7 @@ namespace DebuffRoulette
                     // 检查是否已经有 "shuailao" 效果，如果有则跳过
                     if (effectsComponent != null && effectsComponent.HasEffect("shuailao"))
                     {
-                        Debug.Log($"复制人 {minionIdentity.name} 已经有 'shuailao' 效果，跳过处理。");
+                       // Debug.Log($"复制人 {minionIdentity.name} 已经有 'shuailao' 效果，跳过处理。");
                         continue;  
                     }
                     float minionAge = (currentCycle - minionIdentity.arrivalTime) * 600f;
@@ -83,12 +84,27 @@ namespace DebuffRoulette
         
                     if (minionAge >= age80PercentThreshold)
                     {
-                        Debug.Log("年龄达到目标年龄的80%");
+                       Debug.Log("年龄达到目标年龄的80%");
 
                         if (effectsComponent != null)
                         {
                             effectsComponent.Add("shuailao", true);
-                            Debug.Log("添加了debuff: shuailao");
+
+
+                            Notifier notifier = gameObject.AddOrGet<Notifier>();
+                            Notification notification = new Notification(
+                                DebuffRoulette.STRINGS.MISC.NOTIFICATIONS.DEBUFFROULETTE.NAME,
+                                NotificationType.DuplicantThreatening,
+                                delegate (List<Notification> notificationList,
+                                object data)
+                                {
+
+                                    return  notificationList.ReduceMessages(false);
+                                },
+                                "/t• " + gameObject.GetProperName(), true, 0f, null, null, null, true, false, false);
+                            notifier.Add(notification, "");
+
+                            // Debug.Log("添加了debuff: shuailao");
                         }
                         else
                         {
@@ -121,7 +137,7 @@ namespace DebuffRoulette
 
 
                         // 延迟执行后的操作
-                        DelayedActionExecutor.Instance.ExecuteAfterDelay(5f, () =>
+                        DelayedActionExecutor.Instance.ExecuteAfterDelay(3f, () =>
                         {
                             Debug.Log("延迟执行了");
                             // 获取原始 GameObject 的位置
@@ -179,6 +195,10 @@ namespace DebuffRoulette
         }
 
 
+        //public static Notification CreateBrokenMachineNotification()
+        //{
+        //    return new Notification(MISC.NOTIFICATIONS.BROKENMACHINE.NAME, NotificationType.BadMinor, (List<Notification> notificationList, object data) => MISC.NOTIFICATIONS.BROKENMACHINE.TOOLTIP + notificationList.ReduceMessages(false), "/t• " + base.master.damageSourceInfo.source, false, 0f, null, null, null, true, false, false);
+        //}
 
 
     }
