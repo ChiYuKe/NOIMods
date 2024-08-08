@@ -1,4 +1,5 @@
-﻿using KModTool;
+﻿using Klei.AI;
+using KModTool;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +15,8 @@ namespace DebuffRoulette
         private static int cachedMinionCount = 0; // 缓存的数量
         private static float lastUpdateTime = 0f; // 上次更新的时间
         private static float updateInterval = 1f; // 定期更新的时间间隔（秒）
+        private static float ageThreshold = 16 * 600f;
+        public static float age80PercentThreshold = ageThreshold * 0.8f; // 目标年龄80%
 
         public static void StartTimer()
         {
@@ -40,6 +43,8 @@ namespace DebuffRoulette
             if (Time.time - lastUpdateTime >= updateInterval)
             {
                 ProcessMinionGameObjects(cachedMinionGameObjects);
+
+                ApplyDebuffIfAgeThresholdMet(cachedMinionGameObjects); // 调用新方法
                 lastUpdateTime = Time.time;
             }
 
@@ -51,11 +56,56 @@ namespace DebuffRoulette
             }
         }
 
+
+
+
+        // 衰老效果
+        private static void ApplyDebuffIfAgeThresholdMet(List<GameObject> minionGameObjects)
+        {
+            float currentCycle = (float)GameClock.Instance.GetCycle();
+
+            foreach (GameObject gameObject in minionGameObjects)
+            {
+                MinionIdentity minionIdentity = gameObject.GetComponent<MinionIdentity>();
+
+                if (minionIdentity != null)
+                {
+                    Effects effectsComponent = gameObject.GetComponent<Effects>();
+
+                    // 检查是否已经有 "shuailao" 效果，如果有则跳过
+                    if (effectsComponent != null && effectsComponent.HasEffect("shuailao"))
+                    {
+                        Debug.Log($"复制人 {minionIdentity.name} 已经有 'shuailao' 效果，跳过处理。");
+                        continue;  
+                    }
+                    float minionAge = (currentCycle - minionIdentity.arrivalTime) * 600f;
+
+        
+                    if (minionAge >= age80PercentThreshold)
+                    {
+                        Debug.Log("年龄达到目标年龄的80%");
+
+                        if (effectsComponent != null)
+                        {
+                            effectsComponent.Add("shuailao", true);
+                            Debug.Log("添加了debuff: shuailao");
+                        }
+                        else
+                        {
+                            Debug.LogWarning("Effects 组件未找到");
+                        }
+                    }
+                }
+            }
+        }
+
+
+
         private static void ProcessMinionGameObjects(List<GameObject> minionGameObjects)
         {
 
             float currentCycle = (float)GameClock.Instance.GetCycle();
-            float ageThreshold = 16 * 600f;
+           
 
             foreach (GameObject gameObject in minionGameObjects)
             {
@@ -83,7 +133,7 @@ namespace DebuffRoulette
                             // 实例化新的 GameObject
                             GameObject prefab = Assets.GetPrefab(new Tag("iron")); // 假设 "iron" 是预制体的标签
                             GameObject newGameObject = GameUtil.KInstantiate(
-                                gameObject, // 这里传入适当的预制体
+                                prefab, // 这里传入适当的预制体
                                 position,
                                 sceneLayer, // 确保传入正确的图层
                                 null, // 如果需要，可以传入父对象
@@ -111,6 +161,7 @@ namespace DebuffRoulette
 
         private static void ApplyRandomDebuff()
         {
+          
             //TODO 每周期随机挑几个添加几个DeBuff
             Debug.Log("debuff添加ok");
         }

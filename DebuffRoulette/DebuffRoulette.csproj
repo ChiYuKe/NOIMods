@@ -68,6 +68,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Buff.cs" />
     <Compile Include="DelayedActionExecutor .cs" />
     <Compile Include="KModPatch.cs" />
     <Compile Include="Tool\FXHManager.cs" />

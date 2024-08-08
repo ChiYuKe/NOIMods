@@ -23,7 +23,18 @@ namespace DebuffRoulette
         }
     }
 
-
+    public class ModifierSetPatch
+    {
+        [HarmonyPatch(typeof(ModifierSet), "Initialize")]
+        public static class ModifierSet_Initialize_Patch
+        {
+            public static void Postfix(ModifierSet __instance)
+            {
+                // 在 ModifierSet 初始化后注册自定义效果
+                Buff.Register(__instance);
+            }
+        }
+    }
 
 
 
