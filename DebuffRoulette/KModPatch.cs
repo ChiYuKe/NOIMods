@@ -28,14 +28,14 @@ namespace DebuffRoulette
 
 
 
-    [HarmonyPatch(typeof(Game), "OnSpawn")]
-    public static class Game_OnSpawn_Patch
-    {
-        public static void Postfix()
-        {
-            // 启动定时器
-            RandomDebuffTimerManager.StartTimer();
-            Debug.Log("定时器已启动。");
-        }
-    }
+    //[HarmonyPatch(typeof(Game), "OnSpawn")]
+    //public static class Game_OnSpawn_Patch
+    //{
+    //    public static void Postfix()
+    //    {
+    //        // 启动定时器
+    //        RandomDebuffTimerManager.StartTimer();
+    //        Debug.Log("定时器已启动。");
+    //    }
+    //}
 }

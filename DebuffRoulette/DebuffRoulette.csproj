@@ -69,6 +69,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="KModPatch.cs" />
+    <Compile Include="Tool\FXHManager.cs" />
+    <Compile Include="Tool\KModEffectConfigurator.cs" />
+    <Compile Include="Tool\KModGridUtilities.cs" />
+    <Compile Include="Tool\KModMinionUtils.cs" />
+    <Compile Include="Tool\KModTransformUtils.cs" />
+    <Compile Include="Tool\StringUtils.cs" />
     <Compile Include="RandomDebuffUpdater .cs" />
     <Compile Include="TimerManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
