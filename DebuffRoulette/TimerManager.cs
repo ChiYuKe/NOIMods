@@ -51,6 +51,7 @@ namespace DebuffRoulette
 
         private static void ProcessMinionGameObjects(List<GameObject> minionGameObjects)
         {
+
             float currentCycle = (float)GameClock.Instance.GetCycle();
             float ageThreshold = 16 * 600f;
 
@@ -63,7 +64,7 @@ namespace DebuffRoulette
                     if (minionAge >= ageThreshold)
                     {
                         Debug.Log("可以死了");
-                        gameObject.GetSMI<DeathMonitor.Instance>().Kill(Db.Get().Deaths.Slain);
+                        gameObject.GetSMI<DeathMonitor.Instance>().Kill(DeathsManager.CombatDeath);
                     }
                 }
             }
@@ -77,7 +78,26 @@ namespace DebuffRoulette
 
         private static void ApplyRandomDebuff()
         {
+            //TODO 每周期随机挑几个添加几个DeBuff
             Debug.Log("debuff添加ok");
         }
+
+        public static class DeathsManager
+        {
+            public static Death CombatDeath { get; private set; }
+
+            static DeathsManager()
+            {
+               
+                CombatDeath = new Death("Combat", null, "老死", "复制人固有一死，或重于泰山，或轻如鸿毛", "dead_on_back", "dead_on_back");
+                
+            }
+        }
+
+
+
+
     }
+
+
 }
