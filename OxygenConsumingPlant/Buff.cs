@@ -26,7 +26,8 @@ namespace OxygenConsumingPlant
                 .AddAttributeModifier(amounts.Stress.deltaAttribute.Id, -1f, false, false, true)
                 .ApplyTo(parent);
             
-            
+
+
         }
     }
 }
