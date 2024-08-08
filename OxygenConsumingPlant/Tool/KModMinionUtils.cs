@@ -51,7 +51,7 @@ namespace KModTool
             Debug.Log($"- 性别: {minionIdentity.gender}");
             Debug.Log($"- 当前位置: {position}");
             Debug.Log($"- 贴纸类型: {minionIdentity.stickerType}");
-            Debug.Log($"- 到达时间: {minionIdentity.arrivalTime}");
+            Debug.Log($"- 生成时间: {minionIdentity.arrivalTime}");
             Debug.Log($"- 语音索引: {minionIdentity.voiceIdx}");
             Debug.Log($"- 语音 ID: {minionIdentity.voiceIdx}");
             Debug.Log($"- 性别字符串键: {minionIdentity.genderStringKey}");
