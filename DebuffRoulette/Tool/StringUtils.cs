@@ -78,5 +78,18 @@ namespace KModTool
             description
             });
         }
+        public static void Add_New_Deaths_Strings(string pillId, string name, string description)
+        {
+            Strings.Add(new string[]
+            {
+            "STRINGS.DUPLICANTS.DEATHS." + pillId.ToUpperInvariant() + ".NAME",
+            UI.FormatAsLink(name, pillId)
+            });
+            Strings.Add(new string[]
+            {
+            "STRINGS.DUPLICANTS.DEATHS." + pillId.ToUpperInvariant() + ".DESCRIPTION",
+            description
+            });
+        }
     }
 }

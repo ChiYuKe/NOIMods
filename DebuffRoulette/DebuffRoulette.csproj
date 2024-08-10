@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="Buff.cs" />
     <Compile Include="DelayedActionExecutor .cs" />
+    <Compile Include="CustomResourceSet .cs" />
     <Compile Include="KModPatch.cs" />
     <Compile Include="STRINGS.cs" />
     <Compile Include="Tool\FXHManager.cs" />
