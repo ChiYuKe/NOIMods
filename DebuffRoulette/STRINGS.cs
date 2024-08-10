@@ -18,5 +18,14 @@ namespace DebuffRoulette
                 }
             }
         }
+        public class DUPLICANTS
+        {
+            public class DEATHS
+            {
+                public static LocString NAME = "老死";
+                public static LocString DESCRIPTION = "{Target} 固有一死，或重于泰山，或轻如鸿毛";
+
+            }
+        }
     }
 }
