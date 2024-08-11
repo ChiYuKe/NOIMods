@@ -21,6 +21,14 @@ namespace DebuffRoulette
                .ApplyTo(parent);
 
 
+            new KModEffectConfigurator("ccss", 3600f, false)
+              .SetEffectName("测试")
+              .SetEffectDescription("菜市场上厕所")
+              .AddAttributeModifier(AddAmountPatch.newAmount.deltaAttribute.Id, -6f, false, false, true)
+
+              .ApplyTo(parent);
+
+
         }
     }
 }
