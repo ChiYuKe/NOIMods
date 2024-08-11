@@ -19,12 +19,14 @@ namespace DebuffRoulette
         private static int cachedMinionCount = 0; // 缓存的复制人数量
         private static float lastUpdateTime = 0f; // 上次更新的时间
         private static readonly float UpdateInterval = 1f; // 定期更新的时间间隔（秒）
-        public static float AgeThreshold = 6 * 600f; // 复制人年龄阈值
-        public static float Age80PercentThreshold = AgeThreshold * 0.8f; // 年龄达到80%时的阈值
+        public static float KModminionAge = 1f;
+        private static float AgeThreshold = KModminionAge * 600f; // 复制人年龄阈值
+        public static float Age80PercentThreshold = AgeThreshold * 0.7f; // 年龄达到70%时的阈值
 
         // 启动定时器
         public static void StartTimer()
         {
+           
             nextTime600 = Time.time + Interval600; // 设置下次600秒任务的时间
             lastUpdateTime = Time.time; // 记录启动时间
             Debug.Log("DeBuff定时器启动时间: " + System.DateTime.Now);
@@ -56,6 +58,10 @@ namespace DebuffRoulette
             {
                 ExecuteTask();
                 nextTime600 = Time.time + Interval600;
+
+
+               
+
             }
         }
 
@@ -71,8 +77,6 @@ namespace DebuffRoulette
         // 处理复制人对象，应用Debuff和处理死亡
         private static void ProcessMinionGameObjects()
         {
-            float currentCycle = (float)GameClock.Instance.GetCycle();
-
             foreach (GameObject gameObject in cachedMinionGameObjects)
             {
                 if (gameObject == null) continue;
@@ -81,19 +85,26 @@ namespace DebuffRoulette
                 if (minionIdentity == null) continue;
 
                 Effects effectsComponent = gameObject.GetComponent<Effects>();
-                float minionAge = (currentCycle - minionIdentity.arrivalTime) * 600f;
+                
+
+
+                var ageInstance = Db.Get().Amounts.Age.Lookup(gameObject);
+                float currentAge = ageInstance.value * 600;
+                Debug.Log($"当前时间{currentAge} /  {AgeThreshold}");
 
                 // 如果年龄达到80%阈值，则应用衰老效果
-                if (minionAge >= Age80PercentThreshold)
+                if (currentAge >= Age80PercentThreshold)
                 {
                     if (effectsComponent != null && !effectsComponent.HasEffect("shuailao"))
                     {
                         effectsComponent.Add("shuailao", true);
+                        effectsComponent.Add("ccss", true);
+                        
                         NotifyDebuffApplied(gameObject);
                     }
                 }
 
-                if (minionAge >= AgeThreshold)
+                if (currentAge >= AgeThreshold)
                 {
                     HandleDeath(gameObject);
                 }
@@ -116,23 +127,41 @@ namespace DebuffRoulette
         // 处理复制人死亡
         private static void HandleDeath(GameObject gameObject)
         {
-            var smi = gameObject.GetSMI<DeathMonitor.Instance>();
-            if (smi != null)
+            // var smi = InitializeDeathMonitor(gameObject);
+
+
+            var smi1 = gameObject.GetSMI<DeathMonitor.Instance>();
+            if (smi1 != null)
             {
-                
-                smi.Kill(DeathsManager.CombatDeath);
+                var db = Db.Get().Deaths.Generic;
+                var mydb = AddNewDeathPatch.customDeath;
+
+                smi1.Kill(mydb);        
                 Debug.Log($"{gameObject.name} 已被执行死亡");
 
-                // 延迟更新缓存和生成新对象
+                // 延迟更新缓存
                 DelayedActionExecutor.Instance.ExecuteAfterDelay(0.1f, () =>
                 {
                     UpdateCache(KModMinionUtils.GetAllMinionGameObjects());
                     CheckForInvalidGameObjects();
                 });
 
+                // 在2秒后生成物品
                 DelayedActionExecutor.Instance.ExecuteAfterDelay(2f, () =>
                 {
-                    GenerateNewObject(gameObject.transform.position);
+                    if (gameObject != null)
+                    {
+                        GenerateNewObject(gameObject.transform.position);
+                    }
+                });
+
+                // 在3秒后移除gameObject
+                DelayedActionExecutor.Instance.ExecuteAfterDelay(100f, () =>
+                {
+                    if (gameObject != null)
+                    {
+                        UnityEngine.Object.Destroy(gameObject);
+                    }
                 });
             }
             else
@@ -140,6 +169,37 @@ namespace DebuffRoulette
                 Debug.LogWarning("DeathMonitor.Instance 为空，无法执行 Kill 操作");
             }
         }
+
+
+        // 附加自己的死亡状态机实现
+        private static KModDeathMonitor.Instance InitializeDeathMonitor(GameObject gameObject)
+        {
+            try
+            {
+                var smiTarget = gameObject.GetComponent<IStateMachineTarget>();
+                if (smiTarget == null)
+                {
+                    smiTarget = gameObject.AddComponent<KPrefabID>();
+                }
+
+                var smi = new KModDeathMonitor.Instance(smiTarget, new KModDeathMonitor.Def());
+                smi.StartSM();
+
+                var retrievedSmi = gameObject.GetSMI<KModDeathMonitor.Instance>();
+                if (retrievedSmi == null)
+                {
+                    Debug.LogError("无法获取 KModDeathMonitor 实例");
+                }
+
+                return retrievedSmi;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"初始化 KModDeathMonitor 时发生错误: {ex.Message}");
+                return null;
+            }
+        }
+
 
         // 检查缓存中的无效GameObject
         private static void CheckForInvalidGameObjects()
@@ -171,9 +231,12 @@ namespace DebuffRoulette
             ApplyRandomDebuff(); // 应用随机Debuff
         }
 
+
+
         // 应用随机Debuff
         private static void ApplyRandomDebuff()
         {
+           
             // 此方法目前未实现，如果需要使用，可以解开注释并实现逻辑
             // List<string> debuffTypes = new List<string> { "debuff1", "debuff2", "debuff3" };
             // foreach (GameObject gameObject in cachedMinionGameObjects)
