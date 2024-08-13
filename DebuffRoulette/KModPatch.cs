@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using static MinionVitalsPanel;
+using static STRINGS.CODEX.STORY_TRAITS.MORB_ROVER_MAKER;
 
 namespace DebuffRoulette
 {
@@ -30,37 +31,21 @@ namespace DebuffRoulette
         }
     }
 
-    [HarmonyPatch(typeof(Deaths))]
-    [HarmonyPriority(Priority.First)]
-    public static class AddNewDeathPatch
+    internal class NewText
     {
-        public static Death customDeath;  
-
-        [HarmonyPostfix]
-        [HarmonyPatch(MethodType.Constructor, new Type[] { typeof(ResourceSet) })]
-        public static void Postfix(Deaths __instance)
+        [HarmonyPatch(typeof(BuildingFacades), MethodType.Constructor, new Type[]
         {
-           
-            if (__instance != null)
+            typeof(ResourceSet)
+        })]
+        public static class GeneratedBuildings_LoadGeneratedBuildings_Patch
+        {
+            public static void Postfix(BuildingFacades __instance)
             {
                 
-                string id = "CustomDeath";
-                string name = "老死";
-                string description = "{Target} 固有一死，或重于泰山，或轻如鸿毛";
-                string animation1 = "dead_on_back";
-                string animation2 = "dead_on_back"; 
-
-                customDeath = new Death(id, __instance, name, description, animation1, animation2);
-                __instance.Add(customDeath);
-                Debug.Log($"新 Death 类型 {name} 已添加");
-            }
-            else
-            {
-                Debug.LogWarning("Deaths 实例为空");
+                __instance.Add("paofu", "飞鱼床", "描述", PermitRarity.Universal, "LuxuryBed", "KModelegantBed_puft_kanim", DlcManager.AVAILABLE_ALL_VERSIONS, null);
             }
         }
     }
-
 
     public class ModifierSetPatch
     {
