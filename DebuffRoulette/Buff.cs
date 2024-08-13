@@ -21,12 +21,33 @@ namespace DebuffRoulette
                .ApplyTo(parent);
 
 
-            new KModEffectConfigurator("ccss", 3600f, false)
-              .SetEffectName("测试")
-              .SetEffectDescription("菜市场上厕所")
-              .AddAttributeModifier(AddAmountPatch.newAmount.deltaAttribute.Id, -6f, false, false, true)
+            new KModEffectConfigurator("debuff1", 3600f, false)
+              .SetEffectName("测试1")
+              .SetEffectDescription("这是DeBuff添加测试")
 
               .ApplyTo(parent);
+
+
+            new KModEffectConfigurator("debuff2", 3600f, false)
+           .SetEffectName("测试2")
+           .SetEffectDescription("这是DeBuff添加测试")
+
+           .ApplyTo(parent);
+
+
+            new KModEffectConfigurator("debuff3", 3600f, false)
+           .SetEffectName("测试3")
+           .SetEffectDescription("这是DeBuff添加测试")
+
+           .ApplyTo(parent);
+
+
+            new KModEffectConfigurator("debuff4", 3600f, false)
+           .SetEffectName("测试4")
+           .SetEffectDescription("这是DeBuff添加测试")
+
+           .ApplyTo(parent);
+
 
 
         }
