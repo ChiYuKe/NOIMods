@@ -91,5 +91,18 @@ namespace KModTool
             description
             });
         }
+        public static void Add_New_Attributes_Strings(string pillId, string name, string description)
+        {
+            Strings.Add(new string[]
+            {
+            "MISSING.STRINGS.CREATURES.ATTRIBUTES" + pillId.ToUpperInvariant() + "DELTA" + ".NAME",
+            name
+            });
+            Strings.Add(new string[]
+            {
+            "MISSING.STRINGS.CREATURES.ATTRIBUTES." + pillId.ToUpperInvariant() + "DELTA" + ".DESC",
+            description
+            });
+        }
     }
 }
