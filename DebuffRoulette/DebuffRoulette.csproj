@@ -70,9 +70,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Buff.cs" />
-    <Compile Include="DelayedActionExecutor .cs" />
+    <Compile Include="Tool\KModDelayedActionExecutor .cs" />
     <Compile Include="CustomResourceSet .cs" />
-    <Compile Include="KModDeathMonitor.cs" />
     <Compile Include="KModPatch.cs" />
     <Compile Include="MinionPatch.cs" />
     <Compile Include="STRINGS.cs" />
