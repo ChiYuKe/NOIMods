@@ -1,11 +1,11 @@
 ﻿using HarmonyLib;
-using Klei.AI;
 using System;
+using Klei.AI;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+
+using UnityEngine;
+using Database;
 
 namespace DebuffRoulette
 {
@@ -23,6 +23,7 @@ namespace DebuffRoulette
                 if (modifiers.initialAmounts != null)
                 {
                     modifiers.initialAmounts.Add(Db.Get().Amounts.Age.Id);
+                    // modifiers.initialAmounts.Add(AddAmountPatch.MiniAgeAmount.Id);
                 }
             }
         }
@@ -38,64 +39,89 @@ namespace DebuffRoulette
         {
             // 确保 Db 和 Amounts.Age 不为空
             var db = Db.Get();
-            if (db != null && db.Amounts != null && db.Amounts.Age != null)
+            if (db?.Amounts?.Age == null)
+            {
+                Debug.LogWarning("Db 或 Amounts.Age 为空，无法添加 AttributeModifier。");
+                return;
+            }
+
+            // 获取 Trait 对象
+            var trait = db.traits.Get(MinionConfig.MINION_BASE_TRAIT_ID);
+            if (trait == null)
+            {
+                Debug.LogWarning("Trait 对象为空，无法添加 AttributeModifier。");
+                return;
+            }
+
+            // 检查是否已存在此 AttributeModifier
+            if (trait.SelfModifiers.Any(modifier => modifier.AttributeId == db.Amounts.Age.maxAttribute.Id))
+            {
+                Debug.LogWarning($"Trait 中已存在 AttributeModifier：{db.Amounts.Age.maxAttribute.Id}，不会重复添加。");
+                return;
+            }
+
+            // 添加 AttributeModifier 到 Trait
+            trait.Add(new AttributeModifier(db.Amounts.Age.maxAttribute.Id, RandomDebuffTimerManager.KModminionAge, name, false, false, true));
+            trait.Add(new AttributeModifier(db.Amounts.Age.deltaAttribute.Id, 1 / 600f, name, false, false, true));
+        }
+    }
+
+
+
+    [HarmonyPatch(typeof(Deaths))]
+    [HarmonyPriority(Priority.First)]
+    public static class AddNewDeathPatch
+    {
+        public static Death customDeath;
+
+        [HarmonyPostfix]
+        [HarmonyPatch(MethodType.Constructor, new Type[] { typeof(ResourceSet) })]
+        public static void Postfix(Deaths __instance)
+        {
+
+            if (__instance != null)
             {
 
-                // 获取 Trait 对象
-                var trait = db.traits.Get(MinionConfig.MINION_BASE_TRAIT_ID);
-                if (trait != null)
-                {
-                    // 检查是否已存在此 AttributeModifier
-                    bool alreadyExists = trait.SelfModifiers.Any(modifier => modifier.AttributeId == db.Amounts.Age.maxAttribute.Id);
+                string id = "CustomDeath";
+                string name = "老死";
+                string description = "{Target} 固有一死，或重于泰山，或轻如鸿毛";
+                string animation1 = "dead_on_back";
+                string animation2 = "dead_on_back";
 
-                    if (!alreadyExists)
-                    {
-                      
-                        // 添加 AttributeModifier 到 Trait
-                       trait.Add(new AttributeModifier(db.Amounts.Age.maxAttribute.Id, RandomDebuffTimerManager.KModminionAge, name, false, false, true));
-                       trait.Add(new AttributeModifier(db.Amounts.Age.deltaAttribute.Id, 1 / 600f, name, false, false, true));
-                        Debug.Log($"已添加 AttributeModifier");
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"已存在 AttributeModifier：{db.Amounts.Age.maxAttribute.Id}，不会重复添加");
-                    }
-                }
-                else
-                {
-                    Debug.LogWarning("Trait 对象为空");
-                }
+                customDeath = new Death(id, __instance, name, description, animation1, animation2);
+                __instance.Add(customDeath);
+                Debug.Log($"新 Death 类型 {name} 已添加");
             }
             else
             {
-                Debug.LogWarning("Db 或 Amounts.Age 为空");
+                Debug.LogWarning("Deaths 实例为空");
             }
         }
     }
 
-    [HarmonyPatch(typeof(Database.Amounts))]
+
+    [HarmonyPatch(typeof(Database.Amounts), "Load")]
     [HarmonyPriority(Priority.First)]
     public static class AddAmountPatch
     {
-        public static Amount newAmount;  // 静态变量保存创建的 Amount
+        public static Amount MiniAgeAmount; 
 
         [HarmonyPostfix]
-        [HarmonyPatch("Load")]
         public static void Postfix(Database.Amounts __instance)
         {
             if (__instance != null)
             {
-                string id = "NewTest";
+                string id = "MiniAge";
                 float min = 0f;
                 float max = 100f;
-                bool show_max = true;
+                bool showMax = true;
                 Units units = Units.Flat;
-                float delta_threshold = 0.1675f;
-                bool show_in_ui = true;
-                string string_root = "测试";
+                float deltaThreshold = 0.1675f;
+                bool showInUI = true;
+                string stringRoot = "STRINGS.CREATURES";
                 string uiSprite = "ui_icon_age";
 
-                newAmount = __instance.CreateAmount(id, min, max, show_max, units, delta_threshold, show_in_ui, string_root, uiSprite);
+                MiniAgeAmount = __instance.CreateAmount(id, min, max, showMax, units, deltaThreshold, showInUI, stringRoot, uiSprite);
                 Debug.Log($"新 Amount 对象 {id} 已添加");
             }
             else
@@ -106,6 +132,60 @@ namespace DebuffRoulette
     }
 
 
+    [HarmonyPatch(typeof(MinionConfig))]
+    public static class AddMiniTagPatch
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch("CreatePrefab")] 
+        public static void Postfix(GameObject __result)
+        {
+            if (__result != null)
+            {
+                Tag modTag = new Tag("ShowModifiedAge");
+                // 添加标签，为了确保年龄描述正常显示
+                __result.AddOrGet<KPrefabID>().AddTag(modTag, false);
+            }
+        }
+    }
+
+
+    [HarmonyPatch(typeof(MinionVitalsPanel))]
+    [HarmonyPatch("Refresh")]
+    public static class MinionVitalsPanelRefreshPatch
+    {
+        public static void Postfix(MinionVitalsPanel __instance, GameObject selectedEntity)
+        {
+            var amountsLines = Traverse.Create(__instance).Field("amountsLines").GetValue<List<MinionVitalsPanel.AmountLine>>();
+            if (amountsLines == null || selectedEntity == null) return;
+
+            Klei.AI.Amounts amounts = selectedEntity.GetAmounts();
+            if (amounts == null) return;
+
+            KPrefabID prefabID = selectedEntity.GetComponent<KPrefabID>();
+            bool hasShowModifiedAgeTag = prefabID != null && prefabID.HasTag("ShowModifiedAge");
+
+            //不是复制人就跳过文本替换
+            if (!hasShowModifiedAgeTag) return;
+            foreach (var amountLine in amountsLines)
+            {
+                if (amountLine.amount.Id == "Age")
+                {
+                    AmountInstance ageInstance = amounts.Get(amountLine.amount);
+                    if (ageInstance != null)
+                    {
+                        
+                        string customAgeText = amountLine.amount.GetDescription(ageInstance).Replace("年龄", "复制人年龄");
+                        string customAgeTooltip = amountLine.toolTipFunc(ageInstance).Replace(
+                            "这只小动物在<style=\"KKeyword\">年龄</style>到达物种寿命上限时就会死去",
+                            "复制人我啊........ \n\n 到点就彻底死了捏");
+
+                        amountLine.locText.SetText(customAgeText);
+                        amountLine.toolTip.toolTip = customAgeTooltip;
+                    }
+                }
+            }
+        }
+    }
 
 
 
@@ -114,11 +194,5 @@ namespace DebuffRoulette
 
 
 
-
-
-
-
-
-
-
+    
 }
