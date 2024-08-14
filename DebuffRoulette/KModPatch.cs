@@ -55,7 +55,7 @@ namespace DebuffRoulette
             public static void Postfix(ModifierSet __instance)
             {
                 // 在 ModifierSet 初始化后注册自定义效果
-                Buff.Register(__instance);
+                DeBuff.Register(__instance);
             }
         }
     }
