@@ -99,7 +99,6 @@ namespace DebuffRoulette
         }
     }
 
-
     [HarmonyPatch(typeof(Database.Amounts), "Load")]
     [HarmonyPriority(Priority.First)]
     public static class AddAmountPatch
