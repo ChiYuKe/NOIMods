@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Buff.cs" />
+    <Compile Include="MiniBrainCore.cs" />
     <Compile Include="Tool\KModDelayedActionExecutor .cs" />
     <Compile Include="CustomResourceSet .cs" />
     <Compile Include="KModPatch.cs" />

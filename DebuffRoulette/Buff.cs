@@ -1,4 +1,5 @@
 ﻿using Database;
+using Klei.AI;
 using KModTool;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,8 @@ namespace DebuffRoulette
        
         public static void Register(ModifierSet parent)
         {
-            Attributes attributes = Db.Get().Attributes;
-            Amounts amounts = Db.Get().Amounts;
+            Database.Attributes attributes = Db.Get().Attributes;
+            Database.Amounts amounts = Db.Get().Amounts;
             new KModEffectConfigurator("shuailao", 3600f, false)
                .SetEffectName("衰老")
                .SetEffectDescription("人老难免有不中用的时候")
@@ -53,6 +54,18 @@ namespace DebuffRoulette
 
 
 
+        }
+
+
+        // 应用衰老效果
+        public static void ApplyDebuff(GameObject gameObject)
+        {
+            Effects effectsComponent = gameObject.GetComponent<Effects>();
+            if (effectsComponent != null && !effectsComponent.HasEffect("shuailao")) // 如果没有衰老效果
+            {
+                effectsComponent.Add("shuailao", true); // 添加衰老效果
+                NotifyDeathApplied(gameObject); // 通知衰老效果已应用
+            }
         }
 
 
@@ -104,6 +117,20 @@ namespace DebuffRoulette
             notifier.Add(notification, "");
         }
 
+
+        // 通知衰老效果应用
+        private static void NotifyDeathApplied(GameObject gameObject)
+        {
+            Notifier notifier = gameObject.AddOrGet<Notifier>();
+            Notification notification = new Notification(
+                DebuffRoulette.STRINGS.MISC.NOTIFICATIONS.DEATHROULETTE.NAME, // 通知标题
+                NotificationType.MessageImportant, // 通知类型
+                (notificationList, data) => notificationList.ReduceMessages(false), // 通知处理函数
+                "/t• " + gameObject.GetProperName(), // 通知内容
+                true, 0f, null, null, null, true, false, false
+            );
+            notifier.Add(notification, ""); // 添加通知
+        }
 
     }
 }
