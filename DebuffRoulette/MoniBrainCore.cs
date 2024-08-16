@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace DebuffRoulette
 {
-    public class KmodMiniBrainCoreConfig : IEntityConfig
+    public class KmodMoniBrainCoreConfig : IEntityConfig
     {
         public string[] GetDlcIds()
         {
@@ -15,8 +15,8 @@ namespace DebuffRoulette
         {
             GameObject gameObject = EntityTemplates.CreateLooseEntity(
                 "KmodMiniBrainCore",
-                KmodMiniBrainCoreConfig.NAME,
-                KmodMiniBrainCoreConfig.DESC,
+                KmodMoniBrainCoreConfig.NAME,
+                KmodMoniBrainCoreConfig.DESC,
                 5f,
                 true,
                 Assets.GetAnim("KmodMiniBrainCore_kanim"),
@@ -32,7 +32,7 @@ namespace DebuffRoulette
             );
 
             KPrefabID prefabID = gameObject.AddOrGet<KPrefabID>();
-            prefabID.AddTag(KmodMiniBrainCoreConfig.tag);
+            prefabID.AddTag(KmodMoniBrainCoreConfig.tag);
             gameObject.AddTag(GameTags.Dead);
 
             gameObject.AddOrGet<Modifiers>();
@@ -52,7 +52,7 @@ namespace DebuffRoulette
                 // 拼接 Traits 名称到描述中
                 foreach (var trait in traits.TraitList)
                 {
-                    KmodMiniBrainCoreConfig.DESC += $"\n- {trait.Name}";
+                    KmodMoniBrainCoreConfig.DESC += $"\n- {trait.Name}";
                 }
             }
         }

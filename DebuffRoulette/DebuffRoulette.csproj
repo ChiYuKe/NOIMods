@@ -69,12 +69,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Buff.cs" />
-    <Compile Include="MiniBrainCore.cs" />
+    <Compile Include="BuffManager.cs" />
+    <Compile Include="MoniBrainCore.cs" />
     <Compile Include="Tool\KModDelayedActionExecutor .cs" />
     <Compile Include="CustomResourceSet .cs" />
     <Compile Include="KModPatch.cs" />
-    <Compile Include="MinionPatch.cs" />
+    <Compile Include="MonionPatch.cs" />
     <Compile Include="STRINGS.cs" />
     <Compile Include="Tool\FXHManager.cs" />
     <Compile Include="Tool\KModEffectConfigurator.cs" />

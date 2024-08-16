@@ -11,7 +11,7 @@ namespace DebuffRoulette
 {
 
     [HarmonyPatch(typeof(MinionConfig))]
-    public static class AddMinionAmountsPatch
+    public static class AddMonionAmountsPatch
     {
         [HarmonyPostfix]
         [HarmonyPatch("AddMinionAmounts")] // 替换为实际的方法名
@@ -31,7 +31,7 @@ namespace DebuffRoulette
 
 
     [HarmonyPatch(typeof(MinionConfig))]
-    public static class AddMinionTraitsPatch
+    public static class AddMonionTraitsPatch
     {
         [HarmonyPostfix]
         [HarmonyPatch("AddMinionTraits")]
