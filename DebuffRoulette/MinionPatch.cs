@@ -90,7 +90,7 @@ namespace DebuffRoulette
             }
 
             // 添加 AttributeModifier 到 Trait
-            trait.Add(new AttributeModifier(db.Amounts.Age.maxAttribute.Id, RandomDebuffTimerManager.KModminionAge, name, false, false, true));
+            trait.Add(new AttributeModifier(db.Amounts.Age.maxAttribute.Id, RandomDebuffTimerManager.MinionAgeThreshold, name, false, false, true));
             trait.Add(new AttributeModifier(db.Amounts.Age.deltaAttribute.Id, 1 / 600f, name, false, false, true));
         }
     }

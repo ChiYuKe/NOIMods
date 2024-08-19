@@ -19,7 +19,7 @@ namespace DebuffRoulette
             GameObject timerUpdaterObject = new GameObject("RandomDebuffUpdater");
             UnityEngine.Object.DontDestroyOnLoad(timerUpdaterObject);
             timerUpdaterObject.AddComponent<RandomDebuffUpdater>();
-            RandomDebuffTimerManager.StartTimer();
+            RandomDebuffTimerManager.InitializeTimer();
 
           
         }

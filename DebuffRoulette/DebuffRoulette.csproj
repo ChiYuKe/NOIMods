@@ -70,7 +70,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BuffManager.cs" />
-    <Compile Include="MinionBrainAttribute.cs" />
     <Compile Include="MinionBrainCoreConfig.cs" />
     <Compile Include="MinionBrainPatch.cs" />
     <Compile Include="MinionBrainResume .cs" />
