@@ -4,32 +4,7 @@ using UnityEngine;
 
 public class TraitManager
 {
-    private readonly Traits _sourceTraitsComponent;
-    private readonly Traits _targetTraitsComponent;
-
-    public TraitManager(Traits sourceTraitsComponent, Traits targetTraitsComponent)
-    {
-        _sourceTraitsComponent = sourceTraitsComponent;
-        _targetTraitsComponent = targetTraitsComponent;
-    }
-
-    public void TransferTraits()
-    {
-        GameObject prefab = Assets.GetPrefab("KmodMiniBrainCore");
-        if (_sourceTraitsComponent == null || _targetTraitsComponent == null)
-        {
-            Debug.LogError("Source or Target Traits component is null.");
-            return;
-        }
-
-        foreach (var trait in _sourceTraitsComponent.TraitList)
-        {
-            _targetTraitsComponent.Add(trait);
-            PrintTraitInfo(trait);
-        }
-    }
-
-    private void PrintTraitInfo(Klei.AI.Trait trait)
+    public static void PrintTraitInfo(Klei.AI.Trait trait)
     {
         Debug.Log("Trait 信息:");
         Debug.Log($"ID: {trait.Id}");

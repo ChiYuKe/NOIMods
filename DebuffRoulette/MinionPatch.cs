@@ -6,12 +6,13 @@ using System.Linq;
 
 using UnityEngine;
 using Database;
+using System.Reflection;
 
 namespace DebuffRoulette
 {
 
     [HarmonyPatch(typeof(MinionConfig))]
-    public static class AddMonionAmountsPatch
+    public static class AddMinionAmountsPatch
     {
         [HarmonyPostfix]
         [HarmonyPatch("AddMinionAmounts")] // 替换为实际的方法名
@@ -23,11 +24,43 @@ namespace DebuffRoulette
                 if (modifiers.initialAmounts != null)
                 {
                     modifiers.initialAmounts.Add(Db.Get().Amounts.Age.Id);
-                    // modifiers.initialAmounts.Add(AddAmountPatch.MiniAgeAmount.Id);
+                  
                 }
             }
         }
     }
+
+    [HarmonyPatch(typeof(MinionModifiers), "OnDeath")]
+    public static class MinionModifiers_OnDeath_Patch
+    {
+        static bool Prefix(MinionModifiers __instance, object data)
+        {
+            // 使用 __instance 获取死亡对象
+            GameObject deathObject = __instance.gameObject;
+           
+            if (deathObject == null)
+            {
+                Debug.LogError("OnDeath: data 不是一个 GameObject 对象。");
+                return true; // 返回 true 继续执行原方法
+            }
+
+            Debug.Log($"OnDeath: {deathObject.name} 收到死亡事件。");
+
+            // 判断死亡对象是否具有特定标签（如 "NoMourning"）
+            if (deathObject.HasTag("KModNoMourning"))
+            {
+                // 如果有这个标签，终止后续的 Mourning 效果添加
+                Debug.Log($"{deathObject.name} 拥有 'NoMourning' 标签，跳过 Mourning 效果。");
+                return false; // 返回 false 跳过原方法
+            }
+
+            // 否则允许原方法执行
+            return true;
+        }
+    }
+
+
+
 
 
     [HarmonyPatch(typeof(MinionConfig))]
@@ -132,7 +165,7 @@ namespace DebuffRoulette
 
 
     [HarmonyPatch(typeof(MinionConfig))]
-    public static class AddMiniTagPatch
+    public static class AddMinionTagPatch
     {
         [HarmonyPostfix]
         [HarmonyPatch("CreatePrefab")] 
