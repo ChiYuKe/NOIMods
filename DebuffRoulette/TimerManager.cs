@@ -23,6 +23,7 @@ namespace DebuffRoulette
         public static float KModminionAge = 1f;
         private static float AgeThreshold = KModminionAge * 600f; // 复制人年龄阈值
         public static float Age80PercentThreshold = AgeThreshold * 0.7f; // 年龄达到70%时的阈值
+        public static float shuailaoDebufftime = AgeThreshold - Age80PercentThreshold; // 年龄达到70%时的阈值
 
         // 启动定时器，设置首次执行时间和日志记录启动时间
         public static void StartTimer()

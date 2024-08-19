@@ -1,6 +1,7 @@
 ﻿using Database;
 using Klei.AI;
 using KModTool;
+using STRINGS;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -15,8 +16,8 @@ namespace DebuffRoulette
         {
             Database.Attributes attributes = Db.Get().Attributes;
             Database.Amounts amounts = Db.Get().Amounts;
-            new KModEffectConfigurator("shuailao", 3600f, false)
-               .SetEffectName("衰老")
+            new KModEffectConfigurator("shuailao", RandomDebuffTimerManager.shuailaoDebufftime, false)
+               .SetEffectName(UI.FormatAsHotkey("衰老"))
                .SetEffectDescription("人老难免有不中用的时候")
                .AddAttributeModifier(attributes.Athletics.Id, -6f, false, false, true)// 运动
                .AddAttributeModifier(attributes.Strength.Id, -5f, false, false, true)//力量

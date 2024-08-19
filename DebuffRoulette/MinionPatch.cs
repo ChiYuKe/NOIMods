@@ -35,18 +35,14 @@ namespace DebuffRoulette
     {
         static bool Prefix(MinionModifiers __instance, object data)
         {
-            // 使用 __instance 获取死亡对象
+           
             GameObject deathObject = __instance.gameObject;
            
             if (deathObject == null)
             {
                 Debug.LogError("OnDeath: data 不是一个 GameObject 对象。");
-                return true; // 返回 true 继续执行原方法
-            }
-
-            Debug.Log($"OnDeath: {deathObject.name} 收到死亡事件。");
-
-            // 判断死亡对象是否具有特定标签（如 "NoMourning"）
+                return true;
+            }   
             if (deathObject.HasTag("KModNoMourning"))
             {
                 // 如果有这个标签，终止后续的 Mourning 效果添加
