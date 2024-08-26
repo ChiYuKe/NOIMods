@@ -3,6 +3,7 @@ using HarmonyLib;
 using Klei.AI;
 using KMod;
 using KModTool;
+using PeterHan.PLib.UI;
 using STRINGS;
 using System;
 using System.Collections.Generic;
@@ -23,13 +24,21 @@ namespace DebuffRoulette
             public override void OnLoad(Harmony harmony)
             {
                 base.OnLoad(harmony);
-                harmony.PatchAll();
+                //harmony.PatchAll();
                 ModEntry.Initialize();
-               
                 Debug.Log("Mod已加载并初始化。");
             }
         }
     }
+
+
+
+
+
+
+
+
+
 
     internal class NewText
     {

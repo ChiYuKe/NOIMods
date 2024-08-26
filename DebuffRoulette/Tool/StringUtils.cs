@@ -65,6 +65,31 @@ namespace KModTool
             }
         }
 
+        public static void Add_New_BuildStrings(string plantId, string name, string description, string effect)
+        {
+            Strings.Add(new string[]
+            {
+                "STRINGS.BUILDINGS.PREFABS." + plantId.ToUpperInvariant() + ".NAME",
+                name
+            });
+            Strings.Add(new string[]
+            {
+                "STRINGS.BUILDINGS.PREFABS." + plantId.ToUpperInvariant() + ".DESC",
+                description
+            });
+            Strings.Add(new string[]
+            {
+                "STRINGS.BUILDINGS.PREFABS." + plantId.ToUpperInvariant() + ".EFFECT",
+                effect
+            });
+        }
+
+
+
+
+
+
+
         public static void Add_New_CustomEffectBuilder_Strings(string pillId, string name, string description)
         {
             Strings.Add(new string[]

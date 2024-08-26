@@ -121,13 +121,13 @@ namespace DebuffRoulette
                 cachedMinionGameObjects.Remove(minion);
                 deadMinions.Add(minion);
 
-                // 延迟操作
+                // 延迟执行操作，以确保在处理完死亡逻辑后更新复制人缓存和移除无效的游戏对象
                 KModDelayedActionExecutor.Instance.ExecuteAfterDelay(0.1f, () =>
-                {
+                {                
                     UpdateMinionCache(KModMinionUtils.GetAllMinionGameObjects());
                     RemoveInvalidGameObjects();
                 });
-
+                // 延迟 2 秒后执行以下操作，以确保在处理完死亡逻辑后生成新的对象
                 KModDelayedActionExecutor.Instance.ExecuteAfterDelay(2f, () =>
                 {
                     if (minion != null)
@@ -179,7 +179,7 @@ namespace DebuffRoulette
         }
 
         // 转移特质
-        private static void TransferTraits(GameObject oldMinion, GameObject newMinion)
+        public static void TransferTraits(GameObject oldMinion, GameObject newMinion)
         {
             var oldTraits = oldMinion.GetComponent<Traits>();
             var newTraits = newMinion.GetComponent<Traits>();

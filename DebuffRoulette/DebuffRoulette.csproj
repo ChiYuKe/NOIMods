@@ -43,6 +43,10 @@
     <Reference Include="FMODUnity">
       <HintPath>D:\Steam\steamapps\common\OxygenNotIncluded\OxygenNotIncluded_Data\Managed\FMODUnity.dll</HintPath>
     </Reference>
+    <Reference Include="PLib, Version=4.8.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Steam\steamapps\common\OxygenNotIncluded\OxygenNotIncluded_Data\Managed\PLib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -61,6 +65,7 @@
     <Reference Include="UnityEngine.ImageConversionModule">
       <HintPath>D:\Steam\steamapps\common\OxygenNotIncluded\OxygenNotIncluded_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="UnityEngine.UI">
       <HintPath>D:\Steam\steamapps\common\OxygenNotIncluded\OxygenNotIncluded_Data\Managed\UnityEngine.UI.dll</HintPath>
     </Reference>
@@ -70,9 +75,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BuffManager.cs" />
+    <Compile Include="BuildingBrain.cs" />
+    <Compile Include="BuildingBrainConfig.cs" />
+    <Compile Include="BuildingBrainPatch.cs" />
+    <Compile Include="BuildingBrainSideScreen.cs" />
+    <Compile Include="BuildingInterface.cs" />
     <Compile Include="MinionBrainCoreConfig.cs" />
     <Compile Include="MinionBrainPatch.cs" />
     <Compile Include="MinionBrainResume .cs" />
+    <Compile Include="Tool\KModAddClonedSideScreen.cs" />
     <Compile Include="Tool\KModDelayedActionExecutor .cs" />
     <Compile Include="CustomResourceSet .cs" />
     <Compile Include="KModPatch.cs" />

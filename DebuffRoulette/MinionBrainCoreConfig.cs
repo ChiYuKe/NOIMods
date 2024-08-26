@@ -30,7 +30,7 @@ namespace DebuffRoulette
                 true,
                 0,
                 SimHashes.Creature,
-                new List<Tag> { GameTags.MiscPickupable }
+                new List<Tag> { GameTags.IndustrialIngredient }
             );
 
             gameObject.AddOrGet<KPrefabID>().AddTag(new Tag("KmodMiniBrainCore"));
@@ -80,6 +80,6 @@ namespace DebuffRoulette
 
         public const string ID = "KmodMiniBrainCore";
         public static readonly Tag tag = TagManager.Create("KmodMiniBrainCore");
-        public const float MASS = 5f;
+        public const float MASS = 1f;
     }
 }
