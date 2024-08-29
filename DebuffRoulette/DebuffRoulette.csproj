@@ -75,17 +75,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BuffManager.cs" />
-    <Compile Include="BuildingBrain.cs" />
-    <Compile Include="BuildingBrainConfig.cs" />
-    <Compile Include="BuildingBrainPatch.cs" />
-    <Compile Include="BuildingBrainSideScreen.cs" />
-    <Compile Include="BuildingInterface.cs" />
+    <Compile Include="Building\BuildingBrain.cs" />
+    <Compile Include="Building\BuildingBrainConfig.cs" />
+    <Compile Include="Building\BuildingBrainCustomScreen .cs" />
+    <Compile Include="Building\BuildingBrainPatch.cs" />
+    <Compile Include="Building\BuildingBrainSideScreen.cs" />
+    <Compile Include="Building\BuildingInterface.cs" />
     <Compile Include="MinionBrainCoreConfig.cs" />
     <Compile Include="MinionBrainPatch.cs" />
     <Compile Include="MinionBrainResume .cs" />
     <Compile Include="Tool\KModAddClonedSideScreen.cs" />
     <Compile Include="Tool\KModDelayedActionExecutor .cs" />
-    <Compile Include="CustomResourceSet .cs" />
     <Compile Include="KModPatch.cs" />
     <Compile Include="MinionPatch.cs" />
     <Compile Include="STRINGS.cs" />

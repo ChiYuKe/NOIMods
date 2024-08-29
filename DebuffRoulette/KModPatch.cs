@@ -38,8 +38,6 @@ namespace DebuffRoulette
 
 
 
-
-
     internal class NewText
     {
         [HarmonyPatch(typeof(BuildingFacades), MethodType.Constructor, new Type[]

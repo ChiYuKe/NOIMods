@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
-
 namespace DebuffRoulette
 {
     public class BuildingBrainSideScreen : SideScreenContent
@@ -16,6 +15,7 @@ namespace DebuffRoulette
         protected override void OnSpawn()
         {
             base.OnSpawn();
+            titleKey = "BuildingBrainTitle"; 
 
             // 创建并设置按钮
             PButton button = new PButton("MyButton")
@@ -27,13 +27,20 @@ namespace DebuffRoulette
 
             // 构建按钮并添加到侧屏内容容器中
             buttonObject = button.Build();
-            buttonObject.transform.SetParent(ContentContainer != null ? ContentContainer.transform : transform, false);
-            this.Refresh();
+            if (ContentContainer != null)
+            {
+                buttonObject.transform.SetParent(ContentContainer.transform, false);
+            }
+            else
+            {
+                buttonObject.transform.SetParent(transform, false);
+                Debug.LogWarning("ContentContainer 为空，默认转换.");
+            }
         }
 
         public override bool IsValidForTarget(GameObject target)
         {
-            return target.GetComponent<BrainBuild>() != null;
+            return target.GetComponent<BuildingBrain>() != null;
         }
 
         public override void SetTarget(GameObject target)
@@ -42,8 +49,12 @@ namespace DebuffRoulette
             if (target != null)
             {
                 Debug.Log($"设置目标: {target.name}");
-                this.target = target.GetComponent<BrainBuild>();
+                this.target = target.GetComponent<BuildingBrain>();
                 Refresh();
+            }
+            else
+            {
+                Debug.LogWarning("目标为空，无法设置。");
             }
         }
 
@@ -52,60 +63,77 @@ namespace DebuffRoulette
             if (this.target == null)
             {
                 Debug.Log("当前目标为空.");
-             
+                if (buttonObject != null)
+                {
+                    buttonObject.SetActive(false);
+                }
+                return;
+            }
+
+            if (buttonObject == null)
+            {
+                Debug.LogError("buttonObject 未被初始化.");
                 return;
             }
 
             if (this.target.WorkComplete)
             {
-                Debug.Log("当成工作完成.");
+                buttonObject.SetActive(true);
+               
+                Debug.Log("工作完成.");
             }
-
-
-            if (this.target.IsConsumed)
+            else if (this.target.IsConsumed)
             {
-                Debug.Log("已经消耗.");
-              
-            
+                Debug.Log("已消耗.");
+                buttonObject.SetActive(true);
+
                 if (this.target.RechargeRequested)
                 {
                     Debug.Log("请求补充.");
-                    return;
                 }
-                
-                return;
             }
             else
             {
-                Debug.Log("没有消耗.");
+                Debug.Log("未消耗.");
                 if (this.target.IsWorking)
                 {
+                    buttonObject.SetActive(false);
                     Debug.Log("正在工作.");
-                    return;
                 }
-              
-                return;
+                else
+                {
+                    buttonObject.SetActive(true);
+                    Debug.Log("不在工作状态.");
+                }
             }
         }
 
         private void OnButtonClicked(GameObject obj)
         {
+            if (this.target == null)
+            {
+                Debug.LogWarning("按钮点击时目标为空.");
+                return;
+            }
+
             if (this.target.WorkComplete)
             {
                 this.target.SetWorkTime(0f);
-                return;
+                Debug.Log("停止工作");
             }
-            if (this.target.IsConsumed)
+            else if (this.target.IsConsumed) // 已经消耗
             {
-                this.target.RequestRecharge(!this.target.RechargeRequested);
-                this.Refresh();
+                Debug.Log("开始配送大脑");
+                this.target.RequestRecharge(!this.target.RechargeRequested); // 开始运送大脑
+               
+                Refresh();
             }
         }
 
-        [SerializeField]
-        private BrainBuild target;
 
 
+
+        private BuildingBrain target;
         private GameObject buttonObject;
     }
 

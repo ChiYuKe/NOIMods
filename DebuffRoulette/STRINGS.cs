@@ -45,6 +45,7 @@ namespace DebuffRoulette
                     public class MINIAGEDELTA
                     {
                         public static LocString NAME = "复制人年龄";
+                        public static LocString DESC = "复制人我啊........ \n\n 到点就彻底死了捏";
                     }
 
                 }

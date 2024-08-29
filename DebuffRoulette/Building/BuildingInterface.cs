@@ -8,7 +8,7 @@ namespace DebuffRoulette
 {
     public interface BuildingInterface
     {
-
+       
 
     }
 }

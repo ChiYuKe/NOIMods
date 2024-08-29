@@ -23,7 +23,7 @@ namespace DebuffRoulette
         private static int cachedMinionCount = 0; // 缓存的复制人数量
 
         // 复制人年龄相关
-        public static float MinionAgeThreshold = 1f; // 复制人年龄阈值（单位：分钟）
+        public static float MinionAgeThreshold = 3f; // 复制人年龄阈值（单位：分钟）
         private static float AgeThreshold = MinionAgeThreshold * 600f; // 年龄阈值（秒）
         private static float Age80PercentThreshold = AgeThreshold * 0.7f; // 年龄80%阈值
         public static float DebuffTimeThreshold = AgeThreshold - Age80PercentThreshold; // 衰老效果阈值
@@ -96,6 +96,7 @@ namespace DebuffRoulette
                 if (currentAgeInSeconds >= AgeThreshold)
                 {
                     HandleDeath(minion);
+                    CameraController.Instance.CameraGoTo(minion.transform.position, 1f, false);
                 }
                 // 衰老
                 if (currentAgeInSeconds >= Age80PercentThreshold)

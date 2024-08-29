@@ -30,6 +30,7 @@ namespace DebuffRoulette
         }
     }
 
+    // 阻断因为老死带来的全体哀悼DeBuff
     [HarmonyPatch(typeof(MinionModifiers), "OnDeath")]
     public static class MinionModifiers_OnDeath_Patch
     {
@@ -49,8 +50,6 @@ namespace DebuffRoulette
                 Debug.Log($"{deathObject.name} 拥有 'NoMourning' 标签，跳过 Mourning 效果。");
                 return false; // 返回 false 跳过原方法
             }
-
-            // 否则允许原方法执行
             return true;
         }
     }
@@ -194,6 +193,17 @@ namespace DebuffRoulette
 
             //不是复制人就跳过文本替换
             if (!hasShowModifiedAgeTag) return;
+
+
+            string ageKeyword = "年龄";
+            string ageTooltipText = "这只小动物在<style=\"KKeyword\">年龄</style>到达物种寿命上限时就会死去";
+           
+            // 根据系统语言切换文本
+            if (Localization.GetCurrentLanguageCode() == "en")
+            {
+                ageKeyword = "Age";
+                ageTooltipText = "This critter will die when its <style=\"KKeyword\">Age</style> reaches its species' maximum lifespan";
+            }
             foreach (var amountLine in amountsLines)
             {
                 if (amountLine.amount.Id == "Age")
@@ -202,12 +212,12 @@ namespace DebuffRoulette
                     if (ageInstance != null)
                     {
                         
-                        string customAgeText = amountLine.amount.GetDescription(ageInstance).Replace("年龄", "复制人年龄");
+                        string customAgeText = amountLine.amount.GetDescription(ageInstance).Replace(ageKeyword, MISSING.STRINGS.CREATURES.ATTRIBUTES.MINIAGEDELTA.NAME);
                         string customAgeTooltip = amountLine.toolTipFunc(ageInstance).Replace(
-                            "这只小动物在<style=\"KKeyword\">年龄</style>到达物种寿命上限时就会死去",
-                            "复制人我啊........ \n\n 到点就彻底死了捏");
+                            ageTooltipText,
+                           MISSING.STRINGS.CREATURES.ATTRIBUTES.MINIAGEDELTA.DESC);
 
-                        amountLine.locText.SetText(customAgeText);
+                        amountLine.locText.SetText(customAgeText); 
                         amountLine.toolTip.toolTip = customAgeTooltip;
                     }
                 }
